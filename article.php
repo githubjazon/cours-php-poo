@@ -16,7 +16,7 @@ require_once('libraries/utils.php');
 require_once('libraries/models/Article.php');
 require_once('libraries/models/Comment.php');
 
-$articlemodel = new Article();
+$articleModel = new Article();
 $commentModel = new Comment();
 
 

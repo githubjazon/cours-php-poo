@@ -23,8 +23,6 @@ if (empty($_GET['id']) || !ctype_digit($_GET['id'])) {
 
 $id = $_GET['id'];
 
-
-
 /**
  * 3. Vérification que l'article existe bel et bien
  */
