@@ -1,31 +1,119 @@
 <?php
 
-require_once('libraries/database.php');
+namespace Controllers;
+
+
 require_once('libraries/utils.php');
 require_once('libraries/models/Article.php');
+require_once('libraries/models/Comment.php');
+
 
 
 class Article {
-    public function index() { 
-        $model = new Article();
 
-// 2 recuperation des articles
+   protected $model;
 
-$articles = $model->findAll("created_at DESC");
+   public function __construct()
+   {
+      $this->model = new \Models\Article();
 
-/**
- * 3. Affichage
- */
-$pageTitle = "Accueil";
+   }
 
-render('articles/index', compact('pageTitle', 'articles'));
+    public function index() {
+
+         $model = new \Models\Article();
+
+         //récup article
+
+         $articles = $model->findAll("created_at DESC");
+
+         //affichage
+
+         $pageTitle = "Accueil";
+   render('articles/index', compact('pageTitle', 'articles'));
      }
 
+
      public function show() {
-        //montrer un article
+
+      
+      $articleModel = new \Models\Article();
+      $commentModel = new \Models\Comment();
+      
+      
+      
+      
+      /**
+       * 1. Récupération du param "id" et vérification de celui-ci
+       */
+      // On part du principe qu'on ne possède pas de param "id"
+      $article_id = null;
+      
+   
+      if (!empty($_GET['id']) && ctype_digit($_GET['id'])) {
+          $article_id = $_GET['id'];
+      }
+      
+      // On peut désormais décider : erreur ou pas ?!
+      if (!$article_id) {
+          die("Vous devez préciser un paramètre `id` dans l'URL !");
+      }
+      
+      
+      
+      /**
+       * 3. Récupération de l'article en question
+       */
+      $article = $articleModel->find($article_id);
+      
+      /**
+       * 4. Récupération des commentaires de l'article en question
+       * Pareil, toujours une requête préparée pour sécuriser la donnée filée par l'utilisateur (cet enfoiré en puissance !)
+       */
+      $commentaires = $commentModel->findAllWithArticle($article_id);
+      
+      /**
+       * 5. On affiche 
+       */
+      $pageTitle = $article['title'];
+      
+      render('articles/show', compact('pageTitle', 'article', 'commentaires', 'article_id'));
      }
 
      public function delete() {
-        //supprimer un article
+
+
+ $model = new \Models\Article();
+
+ 
+/**
+ * 1. On vérifie que le GET possède bien un paramètre "id" (delete.php?id=202) et que c'est bien un nombre
+ */
+if (empty($_GET['id']) || !ctype_digit($_GET['id'])) {
+    die("Ho ?! Tu n'as pas précisé l'id de l'article !");
+}
+
+$id = $_GET['id'];
+
+/**
+ * 3. Vérification que l'article existe bel et bien
+ */
+// $query = $pdo->prepare('SELECT * FROM articles WHERE id = :id');
+// $query->execute(['id' => $id]);
+$article = $model->find($id);
+if (!$article) {
+    die("L'article $id n'existe pas, vous ne pouvez donc pas le supprimer !");
+}
+
+/**
+ * 4. Réelle suppression de l'article
+ */
+$model->delete($id);
+
+/**
+ * 5. Redirection vers la page d'accueil
+ */
+
+ redirect('index.php');
      }
 }
