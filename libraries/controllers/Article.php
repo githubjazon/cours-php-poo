@@ -21,11 +21,11 @@ class Article {
 
     public function index() {
 
-         $model = new \Models\Article();
+      
 
          //récup article
 
-         $articles = $model->findAll("created_at DESC");
+         $articles = $this->model->findAll("created_at DESC");
 
          //affichage
 
@@ -37,7 +37,6 @@ class Article {
      public function show() {
 
       
-      $articleModel = new \Models\Article();
       $commentModel = new \Models\Comment();
       
       
@@ -64,7 +63,7 @@ class Article {
       /**
        * 3. Récupération de l'article en question
        */
-      $article = $articleModel->find($article_id);
+      $article = $this->Model->find($article_id);
       
       /**
        * 4. Récupération des commentaires de l'article en question
@@ -83,8 +82,6 @@ class Article {
      public function delete() {
 
 
- $model = new \Models\Article();
-
  
 /**
  * 1. On vérifie que le GET possède bien un paramètre "id" (delete.php?id=202) et que c'est bien un nombre
@@ -100,7 +97,7 @@ $id = $_GET['id'];
  */
 // $query = $pdo->prepare('SELECT * FROM articles WHERE id = :id');
 // $query->execute(['id' => $id]);
-$article = $model->find($id);
+$article = $this->model->find($id);
 if (!$article) {
     die("L'article $id n'existe pas, vous ne pouvez donc pas le supprimer !");
 }
@@ -108,7 +105,7 @@ if (!$article) {
 /**
  * 4. Réelle suppression de l'article
  */
-$model->delete($id);
+$this->model->delete($id);
 
 /**
  * 5. Redirection vers la page d'accueil
