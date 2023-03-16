@@ -1,5 +1,6 @@
 <?php
 
-require_once('libraries/controlleurs/Comment.php');
-$controlleur = new \Controlleurs\Comment();
-$controlleur->insert();
+require_once('libraries/autoload.php');
+
+$controller = new \Controllers\Comment();
+$controller->insert();
