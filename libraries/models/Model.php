@@ -2,8 +2,6 @@
 
 namespace Models;
 
-require_once('libraries/database.php');
-
 abstract class Model 
 {
 
@@ -12,7 +10,7 @@ abstract class Model
 
     public function __construct()
     {
-        $this->pdo = getpdo();
+        $this->pdo = \Database::getpdo();
     }
 
     public function find(int $id) {
